@@ -10,3 +10,5 @@ dependencies = [
     "gunicorn>=26.0.0",
 ]
 
+[tool.vercel]
+entrypoint = "flaskr:app"

@@ -1,11 +1,14 @@
 from flask import Flask
-from .home import app
-
-print("Static folder:", app.static_folder)
-print("Template folder:", app.template_folder)
+from .home import app as home_bp
 
 def create_app():
-    flask_app = Flask(__name__)
-    flask_app.register_blueprint(app)
+    app = Flask(__name__)
 
-    return flask_app
+    app.register_blueprint(home_bp)
+
+    print("Static folder:", app.static_folder)
+    print("Template folder:", app.template_folder)
+
+    return app
+
+app = create_app()
