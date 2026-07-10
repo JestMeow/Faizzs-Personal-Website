@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+faizzs_website.egg-info/PKG-INFO
+faizzs_website.egg-info/SOURCES.txt
+faizzs_website.egg-info/dependency_links.txt
+faizzs_website.egg-info/requires.txt
+faizzs_website.egg-info/top_level.txt
+flaskr/__init__.py
+flaskr/home.py
