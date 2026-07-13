@@ -2,14 +2,14 @@ from flask import (
     Blueprint, render_template, url_for
 )
 
-app = Blueprint(
-    'app',
+home = Blueprint(
+    'home',
     __name__,
     template_folder='templates',
     static_folder='static'
 )
 
-@app.route('/')
-def home():
+@home.route('/')
+def create_home():
     return render_template('index.html')
 

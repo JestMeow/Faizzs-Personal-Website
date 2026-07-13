@@ -33,7 +33,22 @@ h1 {
     font-family: TerminusBold;
 }
 
-/* Actual Stuff */
+/*================================ Actual Stuff =================================*/
+
+@keyframes wobble {
+    0% {
+        transform: translateY(0) translateX();
+    }
+    100% {
+        transform: translateY(-2px);
+    }
+}
+
+.name-display span {
+    display: inline-block;
+    animation: wobble 0.5s ease-in-out infinite alternate;
+    animation-delay: calc(var(--random-value) * 0.5s);
+}
 
 .main {
     background-color: var(--background-color);
@@ -53,18 +68,31 @@ h1 {
 }
 
 
+.hamburger {
+    display: none;
+}
+
+
 .pic-about {
     display: flex;
     flex-direction: row;
 }
 
 
+.banner {
+    display: none;
+}
+
+
 .pic {
-    width: 300px;
-    height: 300px;
+    background-color: yellow;
+
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
 
     margin-right: 24px;
+    margin-left: 24px;
 }
 
 
@@ -79,8 +107,7 @@ h1 {
     width: 100%;
 
     display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
 }
 
@@ -112,14 +139,62 @@ h1 {
 
         font-size: 16px;
     }
+
+    .hamburger {
+        display: inline;
+        position: absolute;
+        z-index: 3;
+        right: 24px;
+
+        padding: 24px;
+
+        background-color: var(--background-color);
+        border: 1px solid var(--text-color);
+
+        width: 8px;
+        height: 8px;
+        margin: -12px;
+
+        font-size: 36px;
+        line-height: calc(50% - 10px);
+        text-indent: -4px;
+    }
+
+    .hamburger:hover {
+        background-color: var(--text-color);
+        color: var(--background-color);
+    }
+
     .pic-about {
         flex-direction: column;
     }
+
+    .banner {
+        display: inline;
+        position: sticky;
+
+        height: 280px;
+        margin: -24px;
+        margin-bottom: -220px;
+
+        background-image: linear-gradient(to top, var(--background-color), rgba(0, 0, 0, 0.5)), url('main_bg.png');
+        background-size: 300% auto;
+    }
+
     .pic {
+        position: sticky;
+        z-index: 2;
+
+        width: 240px;
+        height: 240px;
+
+        bottom: 240px;
+
         margin: auto;
     }
+    
     .about {
-        margin-top: 4px;
+        margin-top: 16px;
     }
 
     .main-buttons {

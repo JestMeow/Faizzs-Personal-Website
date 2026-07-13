@@ -8,12 +8,14 @@
     </head>
     <body>
         <div class="main">
+            <div class="hamburger">=</div>
             <div class="pic-about">
+                <div class="banner"></div>
                 <img
                     class="pic"
                     src="https://github.com/JestMeow.png" alt="My GitHub pfp">
                 <div class="about">
-                    <h1>M. Fa'izz Shafi'ie</h1>
+                    <h1 class="name-display">M. Fa'izz Shafi'ie</h1>
                     <p style="text-indent: 40px">Hello... I'm Fa'izz.</p>
                     <p>I write music and build software.</p>
                     <br>
@@ -27,12 +29,28 @@
                 </div>
             </div>
             <div class="main-buttons">
-                <button class="main-button">My Music(WIP)</button>
-                <button class="main-button">My Projects(WIP)</button>
+                <button class="main-button">Projects</button>
+                <button class="main-button">Music</button>
             </div>
 
             <br>
             <p>I'll add more stuff here later.</p>
+            <p>The top two buttons don't have a function yet btw.</p>
+            <script>
+                const name_display = document.querySelector('.name-display');
+
+                name_display.innerHTML = name_display.textContent
+                    .split('')
+                    .map(char => `<span style="--random-value: ${Math.random()}">${char == ' ' ? '&nbsp;' : char}</span>`)
+                    .join('');
+
+
+                /*
+                const name_characters = name_display.textContent.split('');
+
+                name_display.innerHTML = characters
+                    .map(())*/
+            </script>
         </div>
     </body>
 </html>
