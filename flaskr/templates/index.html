@@ -29,13 +29,41 @@
                 </div>
             </div>
             <div class="main-buttons">
-                <button class="main-button">Projects</button>
-                <button class="main-button">Music</button>
+                <button class="main-button" onclick="show_cards('projects')">Projects</button>
+                <button class="main-button" onclick="show_cards('tracks')">Music</button>
             </div>
 
             <br>
-            <p>I'll add more stuff here later.</p>
-            <p>The top two buttons don't have a function yet btw.</p>
+
+            <div class="project-cards">
+                <p>Here are some of my projects on GitHub.</p>
+                {% for row in projects_metadata %}
+                <div class="project-card">
+                    <h3><a style="color: var(--text-color);" href="{{ row.github_url }}">{{ row.title }}</a></h3>
+                    <p style="text-indent: 16px;">{{ row.description }}</p>
+                    <a style="color: LinkText;" href="{{ row.github_url }}">{{ row.github_url }}</a>
+                </div>
+                {% endfor %}
+            </div>
+
+
+
+            <div class="track-cards" style="display: none;">
+                <p>Incase you're interested, here is my <a style="color: LinkText;" href="https://musescore.com/user/41005793">Musescore profile</a>.</p>
+                {% for row in soundcloud_preview_data %}
+                <div class="track-card">
+                    <iframe 
+                        width="100%" 
+                        height="166" 
+                        scrolling="no" 
+                        frameborder="no" 
+                        allow="autoplay" 
+                        data-src="https://w.soundcloud.com/player/?url={{ row.track }}&color=%23ff5500&auto_play=false&hide_related=true&single_active=true&show_playcount=false&show_artwork=false">
+                    </iframe>
+                </div>
+                {% endfor %}
+            </div>
+
             <script>
                 const name_display = document.querySelector('.name-display');
 
@@ -45,11 +73,30 @@
                     .join('');
 
 
-                /*
-                const name_characters = name_display.textContent.split('');
+                const project_card = document.querySelector('.project-cards');
+                const track_card = document.querySelector('.track-cards');
 
-                name_display.innerHTML = characters
-                    .map(())*/
+                function show_cards(type = "projects") {
+
+                    switch (type) {
+                        case "projects":
+                            track_card.style.display = 'none';
+                            project_card.style.display = 'block';
+                            break;
+                        case "tracks":
+                            project_card.style.display = 'none';
+                            track_card.style.display = 'block';
+
+                            const iframes = track_card.querySelectorAll('iframe');
+                            iframes.forEach(iframe => {
+                                const actualSrc = iframe.getAttribute('data-src');
+                                if (actualSrc && !iframe.src) {
+                                    iframe.src = actualSrc;
+                                }
+                            });
+                            break;
+                    }
+                }
             </script>
         </div>
     </body>

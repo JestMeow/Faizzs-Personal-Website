@@ -1,8 +1,4 @@
 #!/bin/bash
 
-set -a
-source .env
-set +a
-
-flask --app $FLASK_APP --debug run
+flask --app flaskr:app --debug run
 

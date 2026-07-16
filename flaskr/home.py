@@ -1,6 +1,10 @@
 from flask import (
-    Blueprint, render_template, url_for
+    Blueprint, render_template
 )
+
+from .db import get_connection
+from psycopg2.extras import RealDictCursor
+
 
 home = Blueprint(
     'home',
@@ -11,5 +15,21 @@ home = Blueprint(
 
 @home.route('/')
 def create_home():
-    return render_template('index.html')
+    conn = get_connection()
 
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    cur.execute('SELECT * FROM soundcloud_preview_data')
+    soundcloud_preview_data = cur.fetchall()
+
+    cur.execute('SELECT * FROM projects_metadata')
+    projects_metadata = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        'index.html',
+        soundcloud_preview_data=soundcloud_preview_data,
+        projects_metadata=projects_metadata
+    )
