@@ -39,9 +39,9 @@
                 <p>Here are some of my projects on GitHub.</p>
                 {% for row in projects_metadata %}
                 <div class="project-card">
-                    <h3><a style="color: var(--text-color);" href="{{ row.github_url }}">{{ row.title }}</a></h3>
+                    <h3><a style="color: var(--text-color);" href="{{ row.github_url }}" target="_blank">{{ row.title }}</a></h3>
                     <p style="text-indent: 16px;">{{ row.description }}</p>
-                    <a style="color: LinkText;" href="{{ row.github_url }}">{{ row.github_url }}</a>
+                    <a style="color: LinkText;" href="{{ row.github_url }}" target="_blank">{{ row.github_url }}</a>
                 </div>
                 {% endfor %}
             </div>
@@ -52,7 +52,54 @@
                 <p>Incase you're interested, here is my <a style="color: LinkText;" href="https://musescore.com/user/41005793">Musescore profile</a>.</p>
                 {% for row in soundcloud_preview_data %}
                 <div class="track-card">
-                    <iframe 
+
+                    <div style="
+                            display: flex;
+                            position: relative;
+                                ">
+                        <img id="track-cover-{{ loop.index0 }}" src="" style="
+                            width: 80px;
+                            height: 80px;
+                            border: 1px solid var(--text-color);
+                            margin-right: 16px;
+                        ">
+
+                        <button class="play-button" onclick="play_track({{ loop.index0 }})">&gt;</button>
+                        <div style="margin-left: 16px">
+                            <h3 style="text-decoration: underline; margin-bottom: 4px;">{{ row.title }}</h3>
+                            - <a href="{{ row.track }}" target="_blank" style="color: LinkText">Soundcloud URL</a>
+                            {% if row.musescore_url is not none %}
+                            <br>
+                            - <a href="{{ row.musescore_url }}" target="_blank" style="color: LinkText">Musescore URL</a>
+                            {% endif %}
+                        </div>
+                        <div id="elapsed-time-{{ loop.index0 }}" style="
+                         position: absolute;
+                         right: 0px;
+                         ">0:00</div>
+                    </div>
+
+                    <div class="progress-{{ loop.index0 }}" style = "
+                        width: 100%;
+                        height: 8px;
+                        border: 1px solid var(--text-color);
+
+                        margin-top: 12px;
+                        ">
+                        <div id="progress-fill-{{ loop.index0 }}" style = "
+                            width: 100%;
+                            height: 8px;
+                            background-color: #f50;
+                            "></div>
+                    </div>
+                    <iframe
+                        id="track-{{ loop.index0 }}"
+                        style="
+                            position: absolute;
+                            left: -69696969px;
+                            width: 1px;
+                            height: 1px;
+                                 "
                         width="100%" 
                         height="166" 
                         scrolling="no" 
@@ -64,6 +111,7 @@
                 {% endfor %}
             </div>
 
+            <script src="https://w.soundcloud.com/player/api.js"></script>
             <script>
                 const name_display = document.querySelector('.name-display');
 
@@ -87,16 +135,135 @@
                             project_card.style.display = 'none';
                             track_card.style.display = 'block';
 
-                            const iframes = track_card.querySelectorAll('iframe');
-                            iframes.forEach(iframe => {
-                                const actualSrc = iframe.getAttribute('data-src');
-                                if (actualSrc && !iframe.src) {
-                                    iframe.src = actualSrc;
-                                }
-                            });
+                            load_tracks();
+
                             break;
                     }
                 }
+
+                const tracks = [];
+                const fills = [];
+                const bars = [];
+                const elapse_time = [];
+                const track_image = [];
+
+                function load_tracks() {
+                    const iframes = track_card.querySelectorAll('iframe');
+                    iframes.forEach(iframe => {
+                        const actualSrc = iframe.getAttribute('data-src');
+                        if (actualSrc && !iframe.src) {
+                            iframe.src = actualSrc;
+                        }
+                    });
+
+
+                    if (tracks.length == 0) {
+                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                            console.log('yo ' + i);
+
+                            const track_iframe = document.getElementById(`track-${i}`);
+                            const track_widget = SC.Widget(track_iframe);
+
+                            console.log(track_widget);
+                            tracks.push(track_widget);
+                        }
+                    }
+                    console.log(tracks);
+
+
+
+                    if (track_image.length == 0) {
+                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                            const cover = document.getElementById(`track-cover-${i}`);
+
+                            tracks[i].bind(SC.Widget.Events.READY, () => {
+                                tracks[i].getCurrentSound((sound) => {
+                                    cover.src = sound.artwork_url;
+                                    //cover.style.marginRight = '16px';
+                                    cover.style = `
+                                        height: 80px;
+                                        width: 80px;
+                                        margin-right: 16px;
+                                        border: 1px solid var(--text-color);
+                                    `;
+                                });
+                            });
+                        }
+                    }
+
+
+
+
+
+                    if (elapse_time.length == 0) {
+                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                            const time = document.getElementById(`elapsed-time-${i}`);
+                            elapse_time.push(time);
+                        }
+                    }
+
+
+
+                    if (fills.length == 0) {
+                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                            const fill = document.getElementById(`progress-fill-${i}`);
+                            fills.push(fill);
+
+                            tracks[i].bind(SC.Widget.Events.PLAY_PROGRESS, (data) => {
+                                fills[i].style.width = `${data.relativePosition * 100}%`;
+
+                                elapse_time[i].innerHTML = `${format_time(data.currentPosition)}`;
+                            });
+                        }
+                    }
+
+                    console.log(fills);
+
+
+                    if (bars.length == 0) {
+                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                            const bar = document.querySelector(`.progress-${i}`);
+                            bars.push(bar);
+
+                            bars[i].addEventListener('click', (event) => {
+                                const bar = bars[i];
+
+                                tracks[i].getDuration((duration) => {
+                                    const rect = bar.getBoundingClientRect();
+                                    const percent = (event.clientX - rect.left) / rect.width;
+
+                                    tracks[i].seekTo(percent * duration);
+                                });
+                            });
+                        }
+                    }
+
+                    console.log(bars);
+
+                                    }
+
+                function play_track(index) {
+                    const trk = tracks[index];
+
+                    trk.toggle(); 
+                }
+
+                function format_time(ms) {
+                    const total = Math.floor(ms / 1000);
+                    const minutes = Math.floor(total / 60);
+                    const seconds = total % 60;
+                    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+                }
+
+                
+
+                
+
+
+
+
+
+
             </script>
         </div>
     </body>
