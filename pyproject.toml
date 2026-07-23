@@ -12,5 +12,8 @@ dependencies = [
     "python-dotenv>=1.2.2",
 ]
 
+[tool.setuptools.packages.find]
+include = ["flaskr*"]
+
 [tool.vercel]
 entrypoint = "flaskr:app"
