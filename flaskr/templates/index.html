@@ -50,7 +50,7 @@
 
             <div class="track-cards" style="display: none;">
                 <p>Incase you're interested, here is my <a style="color: LinkText;" href="https://musescore.com/user/41005793">Musescore profile</a>.</p>
-                {% for row in soundcloud_preview_data %}
+                {% for row in soundcloud_widget_metadata %}
                 <div class="track-card">
 
                     <div style="
@@ -159,7 +159,7 @@
 
 
                     if (tracks.length == 0) {
-                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                        for (let i = 0; i < {{ soundcloud_widget_metadata|length }}; i++) {
                             console.log('yo ' + i);
 
                             const track_iframe = document.getElementById(`track-${i}`);
@@ -174,7 +174,7 @@
 
 
                     if (track_image.length == 0) {
-                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                        for (let i = 0; i < {{ soundcloud_widget_metadata|length }}; i++) {
                             const cover = document.getElementById(`track-cover-${i}`);
 
                             tracks[i].bind(SC.Widget.Events.READY, () => {
@@ -197,7 +197,7 @@
 
 
                     if (elapse_time.length == 0) {
-                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                        for (let i = 0; i < {{ soundcloud_widget_metadata|length }}; i++) {
                             const time = document.getElementById(`elapsed-time-${i}`);
                             elapse_time.push(time);
                         }
@@ -206,7 +206,7 @@
 
 
                     if (fills.length == 0) {
-                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                        for (let i = 0; i < {{ soundcloud_widget_metadata|length }}; i++) {
                             const fill = document.getElementById(`progress-fill-${i}`);
                             fills.push(fill);
 
@@ -222,7 +222,7 @@
 
 
                     if (bars.length == 0) {
-                        for (let i = 0; i < {{ soundcloud_preview_data|length }}; i++) {
+                        for (let i = 0; i < {{ soundcloud_widget_metadata|length }}; i++) {
                             const bar = document.querySelector(`.progress-${i}`);
                             bars.push(bar);
 

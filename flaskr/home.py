@@ -19,17 +19,21 @@ def create_home():
 
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    cur.execute('SELECT * FROM soundcloud_preview_data')
-    soundcloud_preview_data = cur.fetchall()
+    cur.execute('SELECT * FROM soundcloud_widget_metadata')
+    soundcloud_widget_metadata = cur.fetchall()
+    soundcloud_widget_metadata.sort(key=lambda item: item['priority'], reverse=True)
+
+    
 
     cur.execute('SELECT * FROM projects_metadata')
     projects_metadata = cur.fetchall()
+    projects_metadata.sort(key=lambda item: item['priority'], reverse=True)
 
     cur.close()
     conn.close()
 
     return render_template(
         'index.html',
-        soundcloud_preview_data=soundcloud_preview_data,
+        soundcloud_widget_metadata=soundcloud_widget_metadata,
         projects_metadata=projects_metadata
     )
